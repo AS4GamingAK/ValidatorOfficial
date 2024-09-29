@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Webhook Message Sender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #7289da;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5b6eae;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Send a Message to Discord</h1>
+    
+    <form id="discordForm">
+        <input type="text" id="message" placeholder="Enter your message" required>
+        <br><br>
+        <button type="submit">Send Message</button>
+    </form>
+
+    <p id="response" style="color: green;"></p>
+
+    <script>
+        const form = document.getElementById('discordForm');
+        const messageInput = document.getElementById('message');
+        const responseText = document.getElementById('response');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting the usual way
+
+            const message = messageInput.value.trim();
+            if (message === '') {
+                alert('Please enter a message.');
+                return;
+            }
+
+            const webhookUrl = 'https://discord.com/api/webhooks/1289955142254202940/ZXY_4yS1HYIpxjBjHkCyOtLCDM8aTnV8dKYwC4k8rVjnBR3sYC264jmoC9X3nwrFDqry'; // Replace with your actual webhook URL
+
+            // Construct the payload for Discord
+            const payload = {
+                content: message // This will be the message sent to Discord
+            };
+
+            // Send the payload to Discord via webhook
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    responseText.textContent = 'Message sent successfully!';
+                    messageInput.value = ''; // Clear the input after sending
+                } else {
+                    responseText.textContent = 'Failed to send the message.';
+                    responseText.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                responseText.textContent = 'Error: ' + error.message;
+                responseText.style.color = 'red';
+            });
+        });
+    </script>
+
+</body>
+</html>
